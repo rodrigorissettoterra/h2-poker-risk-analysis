@@ -1,0 +1,41 @@
+# Ambientes virtuais
+.venv/
+venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Variáveis de ambiente
+.env
+.env.*
+
+# Dados sensíveis / bases originais
+data/*.csv
+data/*.xlsx
+data/*.xls
+data/*.parquet
+data/*.json
+*.csv
+*.xlsx
+*.xls
+*.parquet
+
+# Saídas geradas
+outputs/
+reports/
+figures/
+exports/
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
