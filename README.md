@@ -47,13 +47,9 @@ A partir dessas bases, foram realizadas análises exploratórias, criação de m
 .
 ├── README.md
 ├── .gitignore
-├── notebooks/
-│   └── Case_H2.ipynb
-├── presentation/
-│   └── apresentacao-analise-dados-h2.pdf
-└── data/
-    └── .gitkeep
-```
+├── Case_H2.ipynb
+└── apresentacao-analise-dados-h2.pdf
+ ```
 
 ## Metodologia
 
