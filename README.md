@@ -294,5 +294,5 @@ These limitations matter because **anomaly detection and fraud detection are not
 
 Data & AI professional interested in Analytics Engineering, Data Science, Artificial Intelligence, automation, and decision-support systems.
 
-- GitHub: [@rodrigorissettoterra](https://github.com/rodrigorissettoterra)
+- GitHub: [Rodrigo Terra](https://github.com/rodrigorissettoterra)
 - LinkedIn: [Rodrigo Terra](https://www.linkedin.com/in/rodrigo-rissetto-terra/)
