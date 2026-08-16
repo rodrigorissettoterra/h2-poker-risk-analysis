@@ -1,239 +1,298 @@
-# Análise de Padrões de Apostas e Identificação de Jogadores de Risco
+# Betting Behavior & Player Risk Analysis
 
-Projeto de análise de dados desenvolvido como case técnico para a H2 Poker, com foco na identificação de padrões de apostas, movimentações financeiras atípicas e possíveis comportamentos de risco em uma plataforma de jogos online.
+> **Behavioral and financial analytics for identifying unusual patterns and potential risk signals in an online gaming platform.**
 
-> **Observação:** os dados originais não estão incluídos neste repositório por conterem informações operacionais e potencialmente sensíveis. O objetivo deste repositório é apresentar a metodologia, o raciocínio analítico, os indicadores criados e os principais aprendizados do projeto.
+A Data Science case focused on transforming betting, customer, and financial transaction data into **interpretable indicators and operational risk signals**.
 
-## Visão geral
+The project explores how exploratory analysis, statistical thresholds, and transparent business rules can support the identification of unusual behavior without treating an analytical flag as proof of fraud.
 
-O projeto analisa o comportamento de jogadores a partir de três bases principais:
+<p>
+  <img src="https://img.shields.io/badge/Python-3.x-blue?logo=python&logoColor=white" alt="Python">
+  <img src="https://img.shields.io/badge/Pandas-Data%20Analysis-150458?logo=pandas&logoColor=white" alt="Pandas">
+  <img src="https://img.shields.io/badge/Jupyter-Notebook-orange?logo=jupyter&logoColor=white" alt="Jupyter">
+  <img src="https://img.shields.io/badge/Data%20Science-Risk%20Analytics-green" alt="Risk Analytics">
+</p>
 
-- `casino_activity.csv`: histórico de apostas dos jogadores, incluindo jogo, tipo de jogo, valor apostado, quantidade de apostas e valor ganho.
-- `client.csv`: informações cadastrais e de origem dos jogadores, como idade, gênero e canais de entrada.
-- `financial_activity.csv`: movimentações financeiras dos jogadores, incluindo depósitos e solicitações de saque.
+---
 
-A partir dessas bases, foram realizadas análises exploratórias, criação de métricas de comportamento e definição de regras para sinalização de possíveis jogadores de risco.
+## Business problem
 
-## Objetivos do projeto
+Online gaming platforms generate large volumes of behavioral and financial data. Among thousands of normal interactions, some patterns may deserve additional investigation:
 
-- Investigar padrões de apostas e ganhos dos jogadores.
-- Identificar jogadores com taxa de retorno muito acima do comportamento esperado.
-- Avaliar concentração de apostas em jogos com alta taxa de retorno.
-- Detectar movimentações financeiras suspeitas, como saques elevados em relação aos depósitos.
-- Criar regras estatísticas simples e interpretáveis para apoiar o monitoramento operacional.
-- Transformar dados brutos em recomendações acionáveis para segurança, produto e operação.
+- unusually high returns;
+- concentration of activity in specific games;
+- withdrawals disproportionate to deposits;
+- unusual combinations of betting and financial behavior.
 
-## Perguntas norteadoras
+The challenge is to transform those patterns into **transparent and interpretable monitoring criteria** while avoiding conclusions unsupported by the data.
 
-- Quais jogadores apresentam comportamentos atípicos de apostas e ganhos?
-- Existem jogos com concentração de apostas e alta taxa de retorno?
-- Quais jogadores realizam movimentações financeiras suspeitas?
-- Como criar critérios objetivos para monitoramento e mitigação de riscos?
-- Como reduzir falsos positivos sem deixar de identificar padrões relevantes?
+---
 
-## Tecnologias utilizadas
+## Analytical questions
 
-- Python
-- Pandas
-- NumPy
-- Matplotlib
-- Seaborn
-- Google Colab
-- Jupyter Notebook
+The project was structured around five questions:
 
-## Estrutura sugerida do repositório
+1. Which players show unusual betting or winning behavior?
+2. Are high-return players concentrated in particular games?
+3. Which financial movements differ substantially from the general population?
+4. Which indicators can support an operational risk-monitoring process?
+5. How can simple rules be designed without creating excessive false positives?
+
+---
+
+## Data
+
+The original case used three datasets.
+
+### Casino activity
+
+Behavioral information related to games, game types, betting values, number of bets, and winnings.
+
+### Customer data
+
+Customer attributes, demographic characteristics, and acquisition-channel information.
+
+### Financial activity
+
+Deposits, withdrawal requests, and financial movement by player.
+
+> **The original datasets are not included in this repository because they contain operational and potentially sensitive information.**
+
+The repository focuses on the methodology, analytical reasoning, indicators, and conclusions.
+
+---
+
+## Analytical workflow
+
+```text
+Raw Data
+   ↓
+Data Quality Checks
+   ↓
+Exploratory Analysis
+   ↓
+Behavioral Indicators + Financial Indicators
+   ↓
+Distribution Analysis
+   ↓
+Statistical Thresholds
+   ↓
+Risk Rules
+   ↓
+Flagged Cases
+   ↓
+Business Interpretation
+   ↓
+Operational Recommendations
+```
+
+---
+
+## Methodology
+
+### 1. Exploratory analysis
+
+The first stage evaluates:
+
+- data structure;
+- missing values;
+- duplicated records;
+- customer profiles;
+- game popularity;
+- betting distributions;
+- winning distributions;
+- deposits and withdrawals;
+- unusual observations.
+
+The objective is to understand the underlying population before defining any risk rule.
+
+### 2. Behavioral indicators
+
+#### Player return ratio
+
+One of the main indicators compares winnings with total betting volume:
+
+```text
+player_return_ratio = total_winnings / total_bets
+```
+
+Interpretation:
+
+```text
+ratio < 1 → player lost more than they won
+ratio = 1 → break-even
+ratio > 1 → player won more than they bet
+```
+
+Extremely high values relative to the population may represent cases that deserve further investigation. They are **signals, not evidence of misconduct**.
+
+#### Game-level return
+
+The same concept is calculated by game to investigate whether certain games are associated with unusually high observed returns and whether flagged players concentrate activity in those games.
+
+### 3. Financial indicators
+
+#### Withdrawal-to-deposit ratio
+
+Financial behavior is evaluated through:
+
+```text
+withdrawal_ratio = total_withdrawals / total_deposits
+```
+
+Unusually high ratios may indicate accounts that deserve further investigation, particularly when combined with other behavioral signals.
+
+---
+
+## Risk rules
+
+The project proposes interpretable rules based on statistical distributions.
+
+Examples include:
+
+- player return above the 99th percentile;
+- relevant exposure to games with unusually high observed return;
+- elevated withdrawal-to-deposit ratio;
+- combinations of multiple behavioral and financial signals.
+
+The goal is to create a **first monitoring layer that business and operational teams can understand and audit**.
+
+---
+
+## Main findings
+
+### 1. A small number of players displayed unusually high returns
+
+Their behavior differed substantially from the general population and justified additional investigation.
+
+### 2. High player returns were not explained solely by game concentration
+
+Players flagged by return metrics were not necessarily concentrating all activity in high-return games. This indicates that simplistic one-dimensional rules can lead to misleading conclusions.
+
+### 3. Financial ratios added a complementary risk dimension
+
+The relationship between deposits and withdrawals helped identify patterns that were not visible from betting behavior alone.
+
+---
+
+## Business value
+
+| Area | Potential use |
+|---|---|
+| Platform security | Identify unusual behavioral patterns |
+| Financial control | Detect disproportionate financial movements |
+| Operations | Prioritize cases for manual review |
+| Product | Investigate games with unusual return patterns |
+| Risk management | Combine multiple indicators into monitoring rules |
+
+---
+
+## Recommendations
+
+### Short term
+
+- automate alerts for extreme return ratios;
+- monitor abnormal withdrawal behavior;
+- combine multiple signals before escalating a case;
+- keep manual review in the decision loop.
+
+### Medium term
+
+- create an operational monitoring dashboard;
+- validate thresholds with domain specialists;
+- measure false-positive rates;
+- calibrate indicators using historical outcomes.
+
+### Longer term
+
+- create a composite risk score;
+- compare rule-based detection with Machine Learning;
+- incorporate temporal behavior;
+- evaluate anomaly-detection models;
+- integrate alerts into operational workflows.
+
+---
+
+## Privacy and responsible interpretation
+
+Risk analytics requires careful interpretation. A statistical anomaly does **not** demonstrate fraud, abuse, or malicious behavior.
+
+For this reason:
+
+- original operational data are not published;
+- analytical flags should be treated as signals for investigation;
+- sensitive identifiers should never be exposed unnecessarily;
+- human review should remain part of decisions with material consequences.
+
+---
+
+## Repository contents
 
 ```text
 .
-├── README.md
 ├── .gitignore
 ├── Case_H2.ipynb
-└── apresentacao-analise-dados-h2.pdf
- ```
-
-## Metodologia
-
-A análise foi organizada em três grandes etapas:
-
-### 1. Análise exploratória dos dados
-
-Nesta etapa foram avaliados:
-
-- estrutura das bases;
-- tipos de dados;
-- valores nulos e duplicados;
-- perfil dos clientes;
-- distribuição de idade e gênero;
-- canais de entrada dos usuários;
-- jogos mais populares;
-- tipos de jogos mais jogados;
-- valores apostados e ganhos;
-- distribuição de depósitos e saques.
-
-### 2. Criação de indicadores
-
-Foram criadas métricas para comparar comportamentos entre jogadores e apoiar a identificação de padrões de risco.
-
-Entre os principais indicadores utilizados estão:
-
-#### Taxa de retorno por jogador
-
-A taxa de retorno foi calculada pela razão entre o valor ganho e o valor apostado:
-
-```text
-taxa_retorno = valor_ganho / valor_apostado
+├── Apresentação Análise de dados - H2.pdf
+└── README.md
 ```
 
-Interpretação:
+---
 
-- `taxa_retorno < 1`: o jogador perdeu mais do que ganhou.
-- `taxa_retorno = 1`: o jogador ficou em equilíbrio.
-- `taxa_retorno > 1`: o jogador ganhou mais do que apostou.
+## Running the notebook
 
-Jogadores com taxa de retorno muito acima do comportamento geral da base podem indicar uso de estratégias específicas, exploração de padrões de determinados jogos ou possível vulnerabilidade operacional.
-
-#### Jogos com alta taxa de retorno
-
-Também foi calculada a taxa de retorno por jogo, permitindo identificar jogos com comportamento acima do esperado.
-
-Esse indicador ajuda a responder perguntas como:
-
-- Há jogos com retorno médio muito superior aos demais?
-- Jogadores com alta taxa de retorno estão concentrando apostas nesses jogos?
-- Determinados jogos exigem revisão de mecânica, regras ou monitoramento?
-
-#### Razão entre saques e depósitos
-
-A razão entre saques e depósitos foi usada para identificar movimentações financeiras potencialmente atípicas:
-
-```text
-razao_saque = total_sacado / total_depositado
-```
-
-Jogadores com razão de saque muito elevada podem exigir monitoramento adicional, principalmente quando os saques não são acompanhados por volume proporcional de apostas.
-
-### 3. Definição de regras de risco
-
-Foram propostas regras estatísticas para sinalizar jogadores suspeitos, como:
-
-- jogadores com taxa de retorno acima do percentil 99 da base;
-- jogadores com participação relevante em jogos de alta taxa de retorno;
-- jogadores com razão de saque elevada em relação aos depósitos.
-
-O foco foi criar uma primeira camada de monitoramento baseada em regras simples, transparentes e fáceis de explicar para áreas de negócio.
-
-## Principais descobertas
-
-A análise indicou três pontos principais:
-
-1. Alguns jogadores apresentaram taxa de retorno muito acima do comportamento médio da base.
-2. A regra de jogos suspeitos pode ser refinada, pois os jogadores sinalizados não estavam necessariamente concentrando 100% das apostas em jogos de alta taxa de retorno.
-3. A razão entre saques e depósitos se mostrou útil para identificar movimentações financeiras atípicas.
-
-Esses pontos indicam que a abordagem por regras é útil como primeira camada de detecção, mas pode ser aprimorada com novas métricas, validação operacional e, em uma etapa futura, modelos preditivos.
-
-## Impacto para o negócio
-
-Os resultados da análise podem apoiar decisões em diferentes frentes:
-
-- **Segurança da plataforma:** identificação de jogadores com comportamento atípico.
-- **Prevenção de perdas:** monitoramento de possíveis explorações de padrões de jogos.
-- **Controle financeiro:** detecção de saques desproporcionais aos depósitos.
-- **Produto:** revisão de jogos com retorno muito acima do esperado.
-- **Operações:** criação de alertas e dashboards de acompanhamento.
-
-## Recomendações
-
-### Curto prazo
-
-- Implementar alertas automáticos para jogadores com taxa de retorno atípica.
-- Monitorar usuários com razão de saque elevada.
-- Revisar regras de saque e depósito para casos extremos.
-
-### Médio prazo
-
-- Criar dashboards para acompanhamento contínuo.
-- Avaliar jogos com maior taxa de retorno.
-- Refinar critérios estatísticos para reduzir falsos positivos.
-
-### Longo prazo
-
-- Desenvolver modelos de machine learning para prever padrões de risco.
-- Criar uma régua de risco com múltiplos indicadores.
-- Integrar os alertas ao fluxo operacional da empresa.
-
-## Como executar o notebook
-
-1. Clone este repositório:
+Clone the repository:
 
 ```bash
-git clone https://github.com/seu-usuario/h2-poker-risk-analysis.git
+git clone https://github.com/rodrigorissettoterra/h2-poker-risk-analysis.git
 cd h2-poker-risk-analysis
 ```
 
-2. Crie e ative um ambiente virtual:
+Create and activate a virtual environment, then install the main dependencies:
 
 ```bash
 python -m venv .venv
-```
-
-No Windows:
-
-```bash
-.venv\Scripts\activate
-```
-
-No Linux/Mac:
-
-```bash
-source .venv/bin/activate
-```
-
-3. Instale as dependências:
-
-```bash
 pip install pandas numpy matplotlib seaborn jupyter
 ```
 
-4. Adicione os arquivos de dados na pasta `data/`, mantendo os nomes esperados pelo notebook:
-
-```text
-data/
-├── casino_activity.csv
-├── client.csv
-└── financial_activity.csv
-```
-
-5. Abra o notebook:
+Open the notebook:
 
 ```bash
-jupyter notebook notebooks/Case_H2.ipynb
+jupyter notebook Case_H2.ipynb
 ```
 
-## Privacidade e dados
+Because the original datasets are private, reproducing the complete analysis requires access to data with the same expected structure.
 
-Os arquivos de dados originais não devem ser versionados no GitHub.
+---
 
-Este repositório foi pensado para fins de portfólio e demonstração técnica. Antes de publicar qualquer base, tabela exportada ou print com IDs de usuários, é importante garantir que não haja exposição de dados pessoais, dados operacionais privados ou informações sensíveis da empresa.
+## Project artifacts
 
-## Possíveis melhorias futuras
+- [Analysis notebook](./Case_H2.ipynb)
+- [Presentation](./Apresentação%20Análise%20de%20dados%20-%20H2.pdf)
 
-- Reorganizar o notebook em funções reutilizáveis.
-- Criar um pipeline em Python para execução automatizada da análise.
-- Exportar os resultados para um dashboard.
-- Criar um score de risco ponderado por múltiplos indicadores.
-- Validar as regras com especialistas de negócio.
-- Comparar a abordagem baseada em regras com modelos de machine learning.
+---
 
-## Autor
+## Limitations
+
+This project represents an analytical case rather than a production fraud-detection platform.
+
+Current limitations include:
+
+- rule-based thresholds;
+- no validated ground-truth fraud labels;
+- no online monitoring;
+- no temporal risk model;
+- no formal false-positive / false-negative optimization;
+- no production alerting system.
+
+These limitations matter because **anomaly detection and fraud detection are not equivalent problems**.
+
+---
+
+## Author
 
 **Rodrigo Terra**
 
-Físico, especialista em tecnologias educacionais e analista de dados.
+Data & AI professional interested in Analytics Engineering, Data Science, Artificial Intelligence, automation, and decision-support systems.
 
 - GitHub: [@rodrigorissettoterra](https://github.com/rodrigorissettoterra)
-- LinkedIn: [Rodrigo Terra](https://www.linkedin.com/in/rodrigoterra/)
-
-## Aviso
-
-Este projeto tem finalidade educacional e de portfólio. As análises, regras e recomendações apresentadas representam uma proposta analítica baseada nos dados disponibilizados para o case e não devem ser interpretadas como acusação ou prova de fraude por parte de qualquer usuário específico.
+- LinkedIn: [Rodrigo Terra](https://www.linkedin.com/in/rodrigo-rissetto-terra/)
