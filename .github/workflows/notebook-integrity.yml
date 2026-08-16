@@ -1,0 +1,41 @@
+name: notebook-integrity
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate-notebooks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install notebook validator
+        run: python -m pip install --upgrade pip nbformat
+
+      - name: Validate Jupyter notebooks
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import nbformat
+
+          notebooks = sorted(Path('.').glob('*.ipynb'))
+          if not notebooks:
+              raise SystemExit('No notebooks found.')
+          for notebook in notebooks:
+              nbformat.read(notebook, as_version=4)
+              print(f'OK: {notebook}')
+          print(f'Validated {len(notebooks)} notebooks.')
+          PY
